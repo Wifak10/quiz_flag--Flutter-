@@ -16,6 +16,7 @@ class _GameScreenState extends State<GameScreen> {
   Map<String, dynamic> currentCountry = {};
   List<String> options = [];
   int score = 0;
+  bool gameOver = false;
 
   Future<void> fetchCountries() async {
     final response = await http.get(Uri.parse(url));
@@ -55,11 +56,13 @@ class _GameScreenState extends State<GameScreen> {
       setState(() {
         score++;
       });
-    }
-
-    setState(() {
       getNextQuestion();
-    });
+    } else {
+      // Si l'utilisateur se trompe, on termine le jeu et on montre le score
+      setState(() {
+        gameOver = true;
+      });
+    }
   }
 
   @override
@@ -74,9 +77,70 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         title: const Text('Quiz des Pays'),
         centerTitle: true,
+        backgroundColor: Colors.teal[700],
       ),
-      body: countries.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+      body: gameOver
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Vous avez perdu !",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    "Votre score final est : $score",
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Recommencer le jeu
+                      setState(() {
+                        score = 0;
+                        gameOver = false;
+                      });
+                      fetchCountries();
+                    },
+                    child: const Text(
+                      "Recommencer le jeu",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      backgroundColor: Colors.yellow[700],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Retourner à la page d'accueil
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: const Text(
+                      "Retour à l'accueil",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      backgroundColor: Colors.yellow[700],
+                    ),
+                  ),
+                ],
+              ),
+            )
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -94,19 +158,32 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   Column(
                     children: options.map((country) {
-                      return ElevatedButton(
-                        onPressed: () => checkAnswer(country),
-                        child: Text(
-                          country,
-                          style: const TextStyle(fontSize: 18),
+                      return Card(
+                        elevation: 5, // Ombrage pour un effet de carte
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        child: ElevatedButton(
+                          onPressed: () => checkAnswer(country),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 12),
+                            child: Text(
+                              country,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                          backgroundColor: Colors.teal,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.teal[400], // Couleur de fond
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                         ),
                       );
                     }).toList(),
@@ -114,26 +191,6 @@ class _GameScreenState extends State<GameScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/score',
-                arguments: score); // Passage du score à l'écran de score
-          },
-          child: const Text(
-            "Voir le score",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            backgroundColor: Colors.yellow[700],
-          ),
-        ),
-      ),
     );
   }
 }
