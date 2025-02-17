@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flip_card/flip_card.dart';
 
-// La fonction additionner, sommeListe, et estPair restent inchangées.
-
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
@@ -88,7 +86,11 @@ class _GameScreenState extends State<GameScreen> {
                 children: [
                   const Text(
                     "Vous avez perdu !",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -113,9 +115,11 @@ class _GameScreenState extends State<GameScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       backgroundColor: Colors.yellow[700],
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      elevation: 12,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -132,9 +136,11 @@ class _GameScreenState extends State<GameScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 40, vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       backgroundColor: Colors.yellow[700],
+                      shadowColor: Colors.black.withOpacity(0.5),
+                      elevation: 12,
                     ),
                   ),
                 ],
@@ -153,7 +159,7 @@ class _GameScreenState extends State<GameScreen> {
                       children: [
                         Image.network(
                           currentCountry['flags']['png'] ?? '',
-                          height: 100,
+                          height: 120,
                         ),
                         const SizedBox(height: 10),
                         const Text(
@@ -162,7 +168,7 @@ class _GameScreenState extends State<GameScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontStyle: FontStyle.italic,
-                            color: Colors.teal,
+                            color: Color.fromARGB(255, 236, 156, 8),
                           ),
                         ),
                       ],
@@ -170,7 +176,7 @@ class _GameScreenState extends State<GameScreen> {
                     back: Container(
                       decoration: BoxDecoration(
                         color: Colors.blueGrey[700],
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -200,7 +206,10 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   const Text(
                     "Qui suis-je ?",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal),
                   ),
                   const SizedBox(height: 20),
                   Column(
@@ -230,6 +239,8 @@ class _GameScreenState extends State<GameScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            shadowColor: Colors.black.withOpacity(0.5),
+                            elevation: 8,
                           ),
                         ),
                       );
