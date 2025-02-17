@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'game_screen.dart';  // Assurez-vous d'importer le fichier `game_screen.dart`
+import 'game_screen.dart'; // Assurez-vous d'importer le fichier `game_screen.dart`
 
 void main() {
   runApp(MyApp());
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
-        '/game': (context) => const GameScreen(),  // Assurez-vous d'avoir ce chemin correct
+        '/game': (context) =>
+            const GameScreen(), // Assurez-vous d'avoir ce chemin correct
       },
     );
   }

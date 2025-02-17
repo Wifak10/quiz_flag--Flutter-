@@ -3,6 +3,50 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 
+// Cette fonction prend deux entiers en entrée et retourne leur somme.
+int additionner(int a, int b) {
+  // La variable 'resultat' stocke la somme de 'a' et 'b'.
+  int resultat = a + b;
+  // La fonction retourne la valeur de 'resultat'.
+  return resultat;
+}
+
+// Cette fonction prend une liste d'entiers en entrée et retourne la somme de tous les éléments de la liste.
+int sommeListe(List<int> nombres) {
+  // La variable 'somme' est initialisée à 0 et servira à accumuler la somme des éléments de la liste.
+  int somme = 0;
+  // La boucle 'for' parcourt chaque élément de la liste 'nombres'.
+  for (int nombre in nombres) {
+    // À chaque itération, la valeur de 'nombre' est ajoutée à 'somme'.
+    somme += nombre;
+  }
+  // La fonction retourne la valeur de 'somme'.
+  return somme;
+}
+
+// Cette fonction prend un entier en entrée et retourne 'true' si l'entier est pair, sinon 'false'.
+bool estPair(int nombre) {
+  // La condition vérifie si le reste de la division de 'nombre' par 2 est égal à 0.
+  // Si c'est le cas, 'nombre' est pair et la fonction retourne 'true'.
+  // Sinon, la fonction retourne 'false'.
+  return nombre % 2 == 0;
+}
+
+// Cette fonction prend une liste d'entiers en entrée et retourne une nouvelle liste contenant uniquement les nombres pairs.
+List<int> filtrerNombresPairs(List<int> nombres) {
+  // La variable 'nombresPairs' est une liste vide qui stockera les nombres pairs.
+  List<int> nombresPairs = [];
+  // La boucle 'for' parcourt chaque élément de la liste 'nombres'.
+  for (int nombre in nombres) {
+    // Si 'nombre' est pair, il est ajouté à la liste 'nombresPairs'.
+    if (estPair(nombre)) {
+      nombresPairs.add(nombre);
+    }
+  }
+  // La fonction retourne la liste 'nombresPairs'.
+  return nombresPairs;
+}
+
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
@@ -11,13 +55,20 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
+  // URL de l'API pour récupérer les informations sur les pays
   final String url = 'https://restcountries.com/v3.1/all';
+  // Liste pour stocker les informations des pays
   List<dynamic> countries = [];
+  // Dictionnaire pour stocker les informations du pays actuel
   Map<String, dynamic> currentCountry = {};
+  // Liste pour stocker les options de réponse
   List<String> options = [];
+  // Variable pour stocker le score du joueur
   int score = 0;
+  // Variable pour indiquer si le jeu est terminé
   bool gameOver = false;
 
+  // Fonction pour récupérer les informations des pays depuis l'API
   Future<void> fetchCountries() async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -30,6 +81,7 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
+  // Fonction pour générer la prochaine question
   void getNextQuestion() {
     if (countries.isEmpty) return;
 
@@ -51,6 +103,7 @@ class _GameScreenState extends State<GameScreen> {
     options.shuffle();
   }
 
+  // Fonction pour vérifier la réponse sélectionnée par l'utilisateur
   void checkAnswer(String selectedCountry) {
     if (selectedCountry == currentCountry['name']['common']) {
       setState(() {
@@ -150,11 +203,11 @@ class _GameScreenState extends State<GameScreen> {
                     currentCountry['flags']['png'] ?? '',
                     height: 100,
                   ),
-                  const SizedBox(height: 20),
                   const Text(
-                    "Quel est ce pays ?",
+                    "Qui suis-je ?",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
+                  const SizedBox(height: 20),
                   const SizedBox(height: 20),
                   Column(
                     children: options.map((country) {
