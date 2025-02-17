@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flip_card/flip_card.dart';
+import 'package:confetti/confetti.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -19,6 +20,25 @@ class _GameScreenState extends State<GameScreen> {
   List<Color> buttonColors = []; // Liste pour stocker les couleurs des boutons
   int score = 0;
   bool gameOver = false;
+  bool answerRevealed =
+      false; // Indicateur pour savoir si la bonne réponse est révélée
+
+  late ConfettiController
+      _confettiController; // Confetti controller pour l'animation
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCountries();
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
 
   Future<void> fetchCountries() async {
     final response = await http.get(Uri.parse(url));
@@ -52,22 +72,41 @@ class _GameScreenState extends State<GameScreen> {
     options.shuffle();
     buttonColors = List.generate(
         4, (_) => Colors.teal[400]!); // Réinitialisation des couleurs
+    answerRevealed = false; // Reset de la révélation de la réponse
   }
 
   void checkAnswer(String selectedCountry, int index) {
     if (selectedCountry == currentCountry['name']['common']) {
       setState(() {
         score++;
-        buttonColors[index] = Colors.green; // Bonne réponse en vert
+        buttonColors[index] = Colors.blue; // Bonne réponse en bleu
+        _confettiController
+            .play(); // Jouer les confettis pour une bonne réponse
       });
     } else {
       setState(() {
         buttonColors[index] = Colors.red; // Mauvaise réponse en rouge
       });
+
+      // Afficher la bonne réponse après un court délai
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          // Révéler la bonne réponse en bleu après un délai
+          int correctIndex = options.indexOf(currentCountry['name']['common']);
+          buttonColors[correctIndex] = Colors.blue; // Bonne réponse en bleu
+        });
+      });
+
+      // Afficher le score après un délai
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          answerRevealed = true; // Afficher le score et la réponse correcte
+        });
+      });
     }
 
     // Attendre un peu avant de passer à la question suivante
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         if (score > 0) {
           getNextQuestion();
@@ -76,12 +115,6 @@ class _GameScreenState extends State<GameScreen> {
         }
       });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchCountries();
   }
 
   @override
@@ -189,7 +222,11 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     back: Container(
                       decoration: BoxDecoration(
-                        color: Colors.blueGrey[700],
+                        gradient: LinearGradient(
+                          colors: [Colors.blue[800]!, Colors.teal[600]!],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.all(16.0),
@@ -259,14 +296,27 @@ class _GameScreenState extends State<GameScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              shadowColor: Colors.black.withOpacity(0.5),
-                              elevation: 8,
                             ),
                           ),
                         );
                       }),
                     ),
                   ),
+                  // Confetti animation
+                  if (!answerRevealed)
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: ConfettiWidget(
+                        confettiController: _confettiController,
+                        blastDirectionality: BlastDirectionality.explosive,
+                        shouldLoop: false,
+                        colors: const [
+                          Colors.blue,
+                          Colors.green,
+                          Colors.yellow
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
