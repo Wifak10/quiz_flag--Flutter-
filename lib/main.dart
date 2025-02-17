@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/routes/app_routes.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      initialRoute: '/',
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.routes,
       // home: HomeScreen(),
       // onGenerateRoute: ,
     );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class ScorePage extends StatelessWidget {
+class ScoreScreen extends StatelessWidget {
   final int score;
 
-  ScorePage({required this.score});
+  ScoreScreen({required this.score});
 
   @override
   Widget build(BuildContext context) {
