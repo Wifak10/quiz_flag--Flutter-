@@ -9,8 +9,12 @@ class AppRoutes {
   static const String score = '/score';
 
   static final Map<String, WidgetBuilder> routes = {
-    home: (context) => HomeScreen(),
-    game: (context) => GameScreen(),
-    score: (context) => ScoreScreen(score: 0), // Replace 0 with the appropriate score value
+    home: (context) => const HomeScreen(),
+    game: (context) => const GameScreen(),
+    score: (context) {
+      // Nous devons obtenir le score de la page de jeu avant de l'envoyer à ScoreScreen
+      final score = ModalRoute.of(context)?.settings.arguments as int? ?? 0;
+      return ScoreScreen(score: score);  // Passage du score à la page de score
+    },
   };
 }
