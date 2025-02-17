@@ -13,7 +13,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: HomeScreen(),
+      initialRoute: '/',
+      // home: HomeScreen(),
+      // onGenerateRoute: ,
     );
   }
 }

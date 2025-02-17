@@ -13,11 +13,7 @@ class HomeScreen extends StatelessWidget {
         body: Center(
             child: ElevatedButton(
           onPressed: () {
-            onPressed:
-            () {
-              Navigator.pushNamed(context,
-                  '/game_screen'); // Navigate to the game screen when the button is pressed);
-            };
+            Navigator.pushNamed(context, '/game');
           },
           child: Text('Commencer le jeu',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
