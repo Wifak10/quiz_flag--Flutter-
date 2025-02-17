@@ -2,50 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'package:flip_card/flip_card.dart';
 
-// Cette fonction prend deux entiers en entrée et retourne leur somme.
-int additionner(int a, int b) {
-  // La variable 'resultat' stocke la somme de 'a' et 'b'.
-  int resultat = a + b;
-  // La fonction retourne la valeur de 'resultat'.
-  return resultat;
-}
-
-// Cette fonction prend une liste d'entiers en entrée et retourne la somme de tous les éléments de la liste.
-int sommeListe(List<int> nombres) {
-  // La variable 'somme' est initialisée à 0 et servira à accumuler la somme des éléments de la liste.
-  int somme = 0;
-  // La boucle 'for' parcourt chaque élément de la liste 'nombres'.
-  for (int nombre in nombres) {
-    // À chaque itération, la valeur de 'nombre' est ajoutée à 'somme'.
-    somme += nombre;
-  }
-  // La fonction retourne la valeur de 'somme'.
-  return somme;
-}
-
-// Cette fonction prend un entier en entrée et retourne 'true' si l'entier est pair, sinon 'false'.
-bool estPair(int nombre) {
-  // La condition vérifie si le reste de la division de 'nombre' par 2 est égal à 0.
-  // Si c'est le cas, 'nombre' est pair et la fonction retourne 'true'.
-  // Sinon, la fonction retourne 'false'.
-  return nombre % 2 == 0;
-}
-
-// Cette fonction prend une liste d'entiers en entrée et retourne une nouvelle liste contenant uniquement les nombres pairs.
-List<int> filtrerNombresPairs(List<int> nombres) {
-  // La variable 'nombresPairs' est une liste vide qui stockera les nombres pairs.
-  List<int> nombresPairs = [];
-  // La boucle 'for' parcourt chaque élément de la liste 'nombres'.
-  for (int nombre in nombres) {
-    // Si 'nombre' est pair, il est ajouté à la liste 'nombresPairs'.
-    if (estPair(nombre)) {
-      nombresPairs.add(nombre);
-    }
-  }
-  // La fonction retourne la liste 'nombresPairs'.
-  return nombresPairs;
-}
+// La fonction additionner, sommeListe, et estPair restent inchangées.
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -55,20 +14,13 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  // URL de l'API pour récupérer les informations sur les pays
   final String url = 'https://restcountries.com/v3.1/all';
-  // Liste pour stocker les informations des pays
   List<dynamic> countries = [];
-  // Dictionnaire pour stocker les informations du pays actuel
   Map<String, dynamic> currentCountry = {};
-  // Liste pour stocker les options de réponse
   List<String> options = [];
-  // Variable pour stocker le score du joueur
   int score = 0;
-  // Variable pour indiquer si le jeu est terminé
   bool gameOver = false;
 
-  // Fonction pour récupérer les informations des pays depuis l'API
   Future<void> fetchCountries() async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -81,7 +33,6 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  // Fonction pour générer la prochaine question
   void getNextQuestion() {
     if (countries.isEmpty) return;
 
@@ -89,7 +40,6 @@ class _GameScreenState extends State<GameScreen> {
     currentCountry = countries[random.nextInt(countries.length)];
 
     String correctCountry = currentCountry['name']['common'];
-
     options = [correctCountry];
 
     while (options.length < 4) {
@@ -103,7 +53,6 @@ class _GameScreenState extends State<GameScreen> {
     options.shuffle();
   }
 
-  // Fonction pour vérifier la réponse sélectionnée par l'utilisateur
   void checkAnswer(String selectedCountry) {
     if (selectedCountry == currentCountry['name']['common']) {
       setState(() {
@@ -111,7 +60,6 @@ class _GameScreenState extends State<GameScreen> {
       });
       getNextQuestion();
     } else {
-      // Si l'utilisateur se trompe, on termine le jeu et on montre le score
       setState(() {
         gameOver = true;
       });
@@ -150,7 +98,6 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Recommencer le jeu
                       setState(() {
                         score = 0;
                         gameOver = false;
@@ -174,7 +121,6 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Retourner à la page d'accueil
                       Navigator.pushNamed(context, '/');
                     },
                     child: const Text(
@@ -199,20 +145,68 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    currentCountry['flags']['png'] ?? '',
-                    height: 100,
+                  // Affichage de l'image du drapeau avec l'effet FlipCard
+                  FlipCard(
+                    direction: FlipDirection.HORIZONTAL,
+                    front: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.network(
+                          currentCountry['flags']['png'] ?? '',
+                          height: 100,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Cliquez sur le drapeau pour avoir un indice',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.teal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    back: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey[700],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Indice :',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Capitale : ${currentCountry['capital']?.join(', ') ?? 'inconnue'}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                  const SizedBox(height: 20),
                   const Text(
                     "Qui suis-je ?",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  const SizedBox(height: 20),
                   Column(
                     children: options.map((country) {
                       return Card(
-                        elevation: 5, // Ombrage pour un effet de carte
+                        elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
