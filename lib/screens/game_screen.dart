@@ -16,6 +16,7 @@ class _GameScreenState extends State<GameScreen> {
   List<dynamic> countries = [];
   Map<String, dynamic> currentCountry = {};
   List<String> options = [];
+  List<Color> buttonColors = []; // Liste pour stocker les couleurs des boutons
   int score = 0;
   bool gameOver = false;
 
@@ -49,19 +50,32 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     options.shuffle();
+    buttonColors = List.generate(
+        4, (_) => Colors.teal[400]!); // Réinitialisation des couleurs
   }
 
-  void checkAnswer(String selectedCountry) {
+  void checkAnswer(String selectedCountry, int index) {
     if (selectedCountry == currentCountry['name']['common']) {
       setState(() {
         score++;
+        buttonColors[index] = Colors.green; // Bonne réponse en vert
       });
-      getNextQuestion();
     } else {
       setState(() {
-        gameOver = true;
+        buttonColors[index] = Colors.red; // Mauvaise réponse en rouge
       });
     }
+
+    // Attendre un peu avant de passer à la question suivante
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        if (score > 0) {
+          getNextQuestion();
+        } else {
+          gameOver = true;
+        }
+      });
+    });
   }
 
   @override
@@ -212,39 +226,46 @@ class _GameScreenState extends State<GameScreen> {
                         color: Colors.teal),
                   ),
                   const SizedBox(height: 20),
-                  Column(
-                    children: options.map((country) {
-                      return Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: ElevatedButton(
-                          onPressed: () => checkAnswer(country),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 40, vertical: 12),
-                            child: Text(
-                              country,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
+                  // Disposition en grille des options avec GridView.count
+                  Expanded(
+                    child: GridView.count(
+                      crossAxisCount: 2, // Nombre de colonnes
+                      crossAxisSpacing: 10, // Espacement horizontal
+                      mainAxisSpacing: 10, // Espacement vertical
+                      childAspectRatio: 3, // Ratio de la taille des éléments
+                      children: List.generate(options.length, (index) {
+                        return Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () => checkAnswer(options[index], index),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 12),
+                              child: Text(
+                                options[index],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.teal[400], // Couleur de fond
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  buttonColors[index], // Couleur dynamique
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              shadowColor: Colors.black.withOpacity(0.5),
+                              elevation: 8,
                             ),
-                            shadowColor: Colors.black.withOpacity(0.5),
-                            elevation: 8,
                           ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }),
+                    ),
                   ),
                 ],
               ),
