@@ -11,4 +11,4 @@ Router.get('/leaderboard',(req, res)=>{
         res.status(200).json(results); //Cela renvoie les meilleurs scores
     })
 })
-module.exports = router ;
+module.exports = Router ;

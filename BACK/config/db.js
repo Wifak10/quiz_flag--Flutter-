@@ -10,7 +10,7 @@ require('dotenv').config();
  * - DB_PASSWORD : Mot de passe de l'utilisateur de la base de données
  * - DB_NAME : Nom de la base de données
  */
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
   host: process.env.DB_HOST,      // L'hôte de la base de données
   user: process.env.DB_USER,      // L'utilisateur de la base de données
   password: process.env.DB_PASSWORD,  // Le mot de passe de l'utilisateur
@@ -23,7 +23,7 @@ const connection = mysql.createConnection({
  * Cette fonction tente de se connecter à la base de données MySQL et affiche un message de succès ou une erreur
  * en cas d'échec de la connexion.
  */
-connection.connect((err) => {
+db.connect((err) => {
   if (err) {
     console.error('Erreur de connexion à la base de données :', err);
     return;
@@ -31,4 +31,4 @@ connection.connect((err) => {
   console.log('Connecté à la base de données MySQL');
 });
 
-module.exports = connection;
+module.exports = db;
