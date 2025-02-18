@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {getUserByEmail , createUser } = require('../models/user.model');
+const Router = express.Router();
 
 //Route pour l'inscription
 Router.post('/register',(req,res)=>{
@@ -35,9 +36,25 @@ Router.post('/register',(req,res)=>{
 Router.post('/login',(req,res)=>{
     const {email, password} = req.body;
     //Vérifier si l'utilisateur existe déjà
+    getUserByEmail(email,(err,user)=>{
     if (err) {
         return res.status(500).send('Erreur serveur');
-        
     }
+    if (!user){
+        return res.status(400).send('Utilisateur non trouvé');    
+    }
+    //Vérifier si le mot de passe est correct
+    bcrypt.compare(password,user.password,(err, isMatch)=>{
+        if (err) {
+            return res.status(500).send('Erreur de vérification du mot de passe');    
+        }
+        if (!isMatch){
+            return res.status(400).send('Mot de passe incorrect');    
+        }
+
+    //Générer un token JWT
+    const token = jwt.sign({userId: user.id}, 'secretKey', {expiresIn: '4h'});
+    res.status(200).json({token});
+    })
 })
 module.exports = Router;
