@@ -1,10 +1,15 @@
 const express = require('express');
-const { createScore, getUserScores } = require('../models/score.model');  // Utilise ici 'score.model'
+const { createScore, getUserScores } = require('../models/score.model');  // Utilise le bon modèle
 const router = express.Router();
 
 // Route pour soumettre un score
-router.post('/score', (req, res) => {
+router.post('/', (req, res) => { // Changer '/score' par '/' ici
   const { userId, score } = req.body;
+
+  // Vérification simple si les données sont présentes
+  if (!userId || !score) {
+    return res.status(400).send('userId et score sont requis');
+  }
 
   // Créer un score dans la base de données
   createScore(userId, score, (err, result) => {
