@@ -55,6 +55,7 @@ Router.post('/login',(req,res)=>{
     //Générer un token JWT
     const token = jwt.sign({userId: user.id}, 'secretKey', {expiresIn: '4h'});
     res.status(200).json({token});
-    })
+    })});
 })
-module.exports = Router;
+
+module.exports = router;
