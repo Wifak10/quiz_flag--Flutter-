@@ -1,5 +1,5 @@
 const express = require('express');
-const { createScore, getUserScores } = require('../models/scoreModel');
+const { createScore, getUserScores } = require('../models/score.model');  // Utilise ici 'score.model'
 const router = express.Router();
 
 // Route pour soumettre un score

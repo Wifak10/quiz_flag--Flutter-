@@ -1,6 +1,6 @@
-const Score = require('../models/score.model'); // Mauvais chemin
- // Ajuster le nom si besoin
- // Importer la connexion à la base de données
+// models/score.model.js
+
+const db = require('../config/db');  // Assurez-vous que cette ligne est là pour importer la connexion à la base de données.
 
 // Fonction pour créer un score
 const createScore = (userId, score, callback) => {
