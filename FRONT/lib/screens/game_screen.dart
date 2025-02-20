@@ -23,8 +23,7 @@ class _GameScreenState extends State<GameScreen> {
   bool answerRevealed =
       false; // Indicateur pour savoir si la bonne réponse est révélée
 
-  late ConfettiController
-      _confettiController; // Confetti controller pour l'animation
+  late ConfettiController _confettiController; // Confetti controller pour l'animation
 
   @override
   void initState() {
@@ -80,8 +79,7 @@ class _GameScreenState extends State<GameScreen> {
       setState(() {
         score++;
         buttonColors[index] = Colors.blue; // Bonne réponse en bleu
-        _confettiController
-            .play(); // Jouer les confettis pour une bonne réponse
+        _confettiController.play(); // Jouer les confettis pour une bonne réponse
       });
     } else {
       setState(() {
@@ -108,10 +106,10 @@ class _GameScreenState extends State<GameScreen> {
     // Attendre un peu avant de passer à la question suivante
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        if (score > 0) {
-          getNextQuestion();
-        } else {
+        if (selectedCountry != currentCountry['name']['common']) {
           gameOver = true;
+        } else {
+          getNextQuestion();
         }
       });
     });
@@ -141,17 +139,17 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    "Votre score final est : $score",
+                    "Votre score final est : $score", // Affichage du score final
                     style: const TextStyle(fontSize: 24),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        score = 0;
-                        gameOver = false;
+                        score = 0; // Réinitialiser le score
+                        gameOver = false; // Réinitialiser l'état de fin de jeu
                       });
-                      fetchCountries();
+                      fetchCountries(); // Relancer la partie
                     },
                     child: const Text(
                       "Recommencer le jeu",
@@ -172,7 +170,7 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/');
+                      Navigator.pushNamed(context, '/'); // Retour à l'écran d'accueil
                     },
                     child: const Text(
                       "Retour à l'accueil",
