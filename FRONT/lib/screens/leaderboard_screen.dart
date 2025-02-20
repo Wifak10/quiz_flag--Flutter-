@@ -16,11 +16,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Future<void> fetchLeaderboard() async {
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:5000/api/leaderboard/leaderboard'), // Utiliser http au lieu de https
+        Uri.parse('http://localhost:5000/api/leaderboard/leaderboard'),
       );
-
-      print('Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         setState(() {
@@ -31,13 +28,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         setState(() {
           errorMessage = 'Failed to load leaderboard';
         });
-        print('Failed to load leaderboard: ${response.body}');
       }
     } catch (e) {
       setState(() {
         errorMessage = 'Failed to fetch leaderboard';
       });
-      print('Failed to fetch leaderboard: $e');
     }
   }
 
@@ -50,17 +45,46 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Classement')),
+      appBar: AppBar(
+        title: Text('Classement'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+        elevation: 4,
+      ),
       body: errorMessage.isNotEmpty
-          ? Center(child: Text(errorMessage))
+          ? Center(
+              child: Text(
+                errorMessage,
+                style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.w600),
+              ),
+            )
           : leaderboard.isEmpty
               ? Center(child: CircularProgressIndicator())
               : ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
                   itemCount: leaderboard.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('Utilisateur: ${leaderboard[index]['username']}'),
-                      subtitle: Text('Score: ${leaderboard[index]['score']}'),
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        title: Text(
+                          'Utilisateur: ${leaderboard[index]['username']}',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          'Score: ${leaderboard[index]['score']}',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.blueAccent,
+                          child: Icon(Icons.star, color: Colors.white),
+                        ),
+                      ),
                     );
                   },
                 ),

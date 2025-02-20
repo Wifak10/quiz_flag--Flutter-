@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-// import '../constants.dart';
+import 'user_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,114 +11,83 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-const String baseUrl = 'https://localhost:5000/api'; // Define your base URL here
-
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _avatarController = TextEditingController();
-  String avatarUrl = '';
+  UserProfile? userProfile;
+  String errorMessage = '';
 
-  Future<void> fetchProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
+  Future<void> fetchUserProfile() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://localhost:5000/api/profile'), // Assurez-vous que l'URL est correcte
+        headers: <String, String>{
+          'Authorization': 'Bearer ${await _getToken()}',
+        },
+      );
 
-    final response = await http.get(
-      Uri.parse('$baseUrl/profile'),
-      headers: <String, String>{
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          userProfile = UserProfile.fromJson(jsonDecode(response.body));
+          errorMessage = '';
+        });
+      } else {
+        setState(() {
+          errorMessage = 'Failed to load profile';
+        });
+      }
+    } catch (e) {
       setState(() {
-        _emailController.text = data['email'];
-        _usernameController.text = data['username'];
-        avatarUrl = data['avatar'];
-        _avatarController.text = data['avatar'];
+        errorMessage = 'Failed to fetch profile';
       });
-    } else {
-      // Handle error
     }
   }
 
-  Future<void> updateProfile() async {
+  Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    final response = await http.put(
-      Uri.parse('$baseUrl/profile'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(<String, String>{
-        'email': _emailController.text,
-        'username': _usernameController.text,
-        'avatar': _avatarController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profil mis à jour')),
-      );
-      setState(() {
-        avatarUrl = _avatarController.text;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la mise à jour du profil')),
-      );
-    }
+    return prefs.getString('token');
   }
 
   @override
   void initState() {
     super.initState();
-    fetchProfile();
+    fetchUserProfile();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Profile')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: avatarUrl.isNotEmpty
-                  ? NetworkImage(avatarUrl)
-                  : AssetImage('assets/default_avatar.png') as ImageProvider,
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _avatarController,
-              decoration: InputDecoration(labelText: 'Avatar URL'),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: updateProfile,
-              child: Text('Update Profile'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                textStyle: TextStyle(fontSize: 18),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: Text('Profil')),
+      body: errorMessage.isNotEmpty
+          ? Center(child: Text(errorMessage))
+          : userProfile == null
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(userProfile!.avatarUrl),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        userProfile!.username,
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        userProfile!.email,
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Naviguer vers l'écran de modification du profil
+                        },
+                        child: Text('Modifier le profil'),
+                      ),
+                    ],
+                  ),
+                ),
     );
   }
 }
