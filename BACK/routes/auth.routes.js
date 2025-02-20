@@ -16,13 +16,13 @@ router.post('/register', (req, res) => {
             return res.status(400).send('Cet email existe déjà');
         }
         // Hashage du mot de passe avant de l'enregistrer
-        bcrypt.hash(password, 10, (err, hasedPassword) => {
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
                 return res.status(500).send('Erreur lors du hashage du mot de passe');
             }
 
             // Créer l'utilisateur dans la base de données
-            createUser(username, email, hasedPassword, avatar, (err, result) => {
+            createUser(username, email, hashedPassword, avatar, (err, result) => {
                 if (err) {
                     return res.status(500).send("Erreur lors de l'inscription");
                 }
@@ -54,9 +54,9 @@ router.post('/login', (req, res) => {
 
             // Générer un token JWT
             const token = jwt.sign({ userId: user.id }, 'secretKey', { expiresIn: '4h' });
-            res.status(200).json({ token });
+            res.status(200).json({ token, userId: user.id });
         });
     });
 });
 
-module.exports = router; // Assurez-vous que l'export utilise `router`
+module.exports = router; 

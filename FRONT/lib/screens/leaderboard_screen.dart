@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import '../constants.dart';
 
-const String baseUrl = 'https://localhost:5000/api'; // Define your base URL here
+const String baseUrl = 'https://localhost:5000/api'; // Remplacez par votre URL d'API
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -24,6 +23,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       });
     } else {
       // Handle error
+      print('Failed to fetch leaderboard');
     }
   }
 
@@ -37,18 +37,23 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Leaderboard')),
-      body: ListView.builder(
-        itemCount: leaderboard.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(leaderboard[index]['avatar']),
+      body: leaderboard.isEmpty
+          ? Center(child: CircularProgressIndicator())  // Ajout d'un loading indicator
+          : ListView.builder(
+              itemCount: leaderboard.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(leaderboard[index]['avatar']),
+                  ),
+                  title: Text(leaderboard[index]['username']),
+                  trailing: Text(
+                    leaderboard[index]['score'].toString(),
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                );
+              },
             ),
-            title: Text(leaderboard[index]['username']),
-            trailing: Text(leaderboard[index]['score'].toString()),
-          );
-        },
-      ),
     );
   }
 }

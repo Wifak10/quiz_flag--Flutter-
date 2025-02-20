@@ -31,8 +31,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', jsonDecode(response.body)['token']);
-      Navigator.pushReplacementNamed(context, AppRoutes.game);
+      final responseData = jsonDecode(response.body);
+      await prefs.setString('token', responseData['token']);
+      await prefs.setString('userId', responseData['userId'].toString()); // Convertir le userId en chaîne de caractères
+
+      // Vérifiez que les valeurs sont correctement stockées
+      final storedToken = prefs.getString('token');
+      final storedUserId = prefs.getString('userId');
+      print('Token stocké: $storedToken');
+      print('User ID stocké: $storedUserId');
+
+      Navigator.pushReplacementNamed(context, AppRoutes.home); // Rediriger vers la page d'accueil
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de la connexion')),

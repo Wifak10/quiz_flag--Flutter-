@@ -1,9 +1,9 @@
 const express = require('express');
-const { createScore, getUserScores } = require('../models/score.model');  // Utilise le bon modèle
+const { createScore, getUserScores } = require('../models/score.model'); // Utilise le bon modèle
 const router = express.Router();
 
 // Route pour soumettre un score
-router.post('/', (req, res) => { // Changer '/score' par '/' ici
+router.post('/', (req, res) => {
   const { userId, score } = req.body;
 
   // Vérification simple si les données sont présentes

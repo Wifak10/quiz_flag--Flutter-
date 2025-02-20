@@ -1,16 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const routes = require('./routes');
+const authRoutes = require('./routes/auth.routes'); // Assurez-vous d'importer correctement les routes d'authentification
+const scoreRoutes = require('./routes/score.routes'); // Assurez-vous d'importer correctement les routes de score
 require('dotenv').config();
 const app = express();
 const cors = require('cors');
 app.use(cors());
 
 app.use(bodyParser.json());
-app.use('/api',routes);
+app.use('/api/auth', authRoutes); // Utilisez '/api/auth' pour les routes d'authentification
+app.use('/api/score', scoreRoutes); // Utilisez '/api/score' pour les routes de score
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT,()=>{
-console.log(`Serveur démarré sur le port ${PORT}`);
-
+app.listen(PORT, () => {
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
