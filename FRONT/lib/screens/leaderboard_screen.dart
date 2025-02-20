@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+// import '../constants.dart';
 
-const String baseUrl = 'https://localhost:5000/api'; 
-// import './constants.dart';
+const String baseUrl = 'https://localhost:5000/api'; // Define your base URL here
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -41,6 +41,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
         itemCount: leaderboard.length,
         itemBuilder: (context, index) {
           return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(leaderboard[index]['avatar']),
+            ),
             title: Text(leaderboard[index]['username']),
             trailing: Text(leaderboard[index]['score'].toString()),
           );

@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 // import '../constants.dart';
 
-const String baseUrl = 'https://localhost:5000/api'; // Define your base URL here
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -13,9 +11,13 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
+const String baseUrl = 'https://localhost:5000/api'; // Define your base URL here
+
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _avatarController = TextEditingController();
+  String avatarUrl = '';
 
   Future<void> fetchProfile() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,6 +35,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _emailController.text = data['email'];
         _usernameController.text = data['username'];
+        avatarUrl = data['avatar'];
+        _avatarController.text = data['avatar'];
       });
     } else {
       // Handle error
@@ -52,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: jsonEncode(<String, String>{
         'email': _emailController.text,
         'username': _usernameController.text,
+        'avatar': _avatarController.text,
       }),
     );
 
@@ -59,6 +64,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Profil mis à jour')),
       );
+      setState(() {
+        avatarUrl = _avatarController.text;
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de la mise à jour du profil')),
@@ -80,13 +88,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: avatarUrl.isNotEmpty
+                  ? NetworkImage(avatarUrl)
+                  : AssetImage('assets/default_avatar.png') as ImageProvider,
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
             ),
             TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              controller: _avatarController,
+              decoration: InputDecoration(labelText: 'Avatar URL'),
             ),
             SizedBox(height: 20),
             ElevatedButton(

@@ -4,9 +4,9 @@ import 'package:quiz/screens/home_screen.dart';
 import 'package:quiz/screens/score_screen.dart';
 import 'package:quiz/screens/register_screen.dart';
 import 'package:quiz/screens/login_screen.dart';
-// import 'package:quiz/screens/profile_screen.dart';
-// import 'package:quiz/screens/leaderboard_screen.dart';
-// import 'package:quiz/screens/user_scores_screen.dart';
+import 'package:quiz/screens/profile_screen.dart';
+import 'package:quiz/screens/leaderboard_screen.dart';
+import 'package:quiz/screens/user_scores_screen.dart';
 
 class AppRoutes {
   static const String home = '/';
@@ -25,10 +25,10 @@ class AppRoutes {
       final score = ModalRoute.of(context)?.settings.arguments as int? ?? 0;
       return ScoreScreen(score: score);
     },
-    register: (context) => RegisterScreen(),
-    login: (context) =>  LoginScreen(),
-    // profile: (context) => const ProfileScreen(),
-    // leaderboard: (context) => const LeaderboardScreen(),
-    // userScores: (context) => const UserScoresScreen(),
+    register: (context) => const RegisterScreen(),
+    login: (context) => const LoginScreen(),
+    profile: (context) => const ProfileScreen(),
+    leaderboard: (context) => const LeaderboardScreen(),
+    userScores: (context) => const UserScoresScreen(),
   };
 }

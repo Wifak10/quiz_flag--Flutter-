@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'game_screen.dart'; // Assurez-vous d'importer le fichier `game_screen.dart`
 import 'dart:ui'; // Import the dart:ui package for ImageFilter
+import '../routes/app_routes.dart'; // Import the routes
 
 void main() {
   runApp(MyApp());
@@ -15,11 +16,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/game': (context) => const GameScreen(),
-      },
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.routes,
     );
   }
 }
@@ -96,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                   // Bouton stylisé pour démarrer le jeu
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/game');
+                      Navigator.pushNamed(context, AppRoutes.game);
                     },
                     child: const Text(
                       'Commencer le jeu',
@@ -113,6 +111,79 @@ class HomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       backgroundColor: Colors.yellow[800], // Couleur du bouton
+                      shadowColor: Colors.black.withOpacity(0.6),
+                      elevation: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Boutons supplémentaires pour naviguer vers les autres pages
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.profile);
+                    },
+                    child: const Text(
+                      'Profil',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      backgroundColor: const Color.fromARGB(255, 165, 165, 166), // Couleur du bouton
+                      shadowColor: Colors.black.withOpacity(0.6),
+                      elevation: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.leaderboard);
+                    },
+                    child: const Text(
+                      'Classements',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      backgroundColor: const Color.fromARGB(255, 158, 189, 159), // Couleur du bouton
+                      shadowColor: Colors.black.withOpacity(0.6),
+                      elevation: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.userScores);
+                    },
+                    child: const Text(
+                      'Mes Scores',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      backgroundColor: const Color.fromARGB(255, 231, 175, 175), // Couleur du bouton
                       shadowColor: Colors.black.withOpacity(0.6),
                       elevation: 10,
                     ),
