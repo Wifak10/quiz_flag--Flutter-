@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; // <-- Ajoute cette ligne si elle n'est pas déjà présente
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,28 +17,21 @@ class _UserScoresScreenState extends State<UserScoresScreen> {
   Future<void> fetchUserScores() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final userId = prefs.getInt('userId'); // Utilise getInt pour récupérer un entier
+    final userId = prefs.getInt('userId');
 
     if (userId == null || token == null) {
       setState(() {
         errorMessage = 'User ID or token not found';
       });
-      print('User ID or token not found');
       return;
     }
 
-    print('Token récupéré: $token');
-    print('User ID récupéré: $userId');
-
     final response = await http.get(
-      Uri.parse('http://localhost:5000/api/score/user-scores/$userId'), // Utiliser le userId dans l'URL
+      Uri.parse('http://localhost:5000/api/score/user-scores/$userId'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
     );
-
-    print('Status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       setState(() {
@@ -46,11 +39,9 @@ class _UserScoresScreenState extends State<UserScoresScreen> {
         errorMessage = '';
       });
     } else {
-      // Handle error
       setState(() {
         errorMessage = 'Failed to load user scores';
       });
-      print('Failed to load user scores: ${response.body}');
     }
   }
 
@@ -63,17 +54,49 @@ class _UserScoresScreenState extends State<UserScoresScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Mes Scores')),
+      appBar: AppBar(
+        title: Text('Mes Scores'),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+        elevation: 5,
+      ),
       body: errorMessage.isNotEmpty
-          ? Center(child: Text(errorMessage))
+          ? Center(
+              child: Text(
+                errorMessage,
+                style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.w600),
+              ),
+            )
           : userScores.isEmpty
-              ? Center(child: CircularProgressIndicator())  // Ajout d'un loading indicator
+              ? Center(child: CircularProgressIndicator())
               : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   itemCount: userScores.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text('Score: ${userScores[index]['score']}'),
-                      subtitle: Text('Date: ${userScores[index]['game_date']}'), // Assurez-vous que le champ est correct
+                    return Card(
+                      elevation: 8,
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        title: Text(
+                          'Score: ${userScores[index]['score']}',
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                        ),
+                        subtitle: Text(
+                          'Date: ${userScores[index]['game_date']}',
+                          style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.deepPurpleAccent,
+                          child: Icon(
+                            Icons.score,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     );
                   },
                 ),

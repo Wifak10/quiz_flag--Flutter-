@@ -38,7 +38,14 @@ const getLeaderboard = (callback) => {
 
   console.log('Exécution de la requête pour récupérer le leaderboard');
 
-  db.query(query, callback);
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Erreur lors de la récupération du leaderboard:', err.message);
+      return callback(err);
+    }
+    console.log('Leaderboard récupéré:', results);
+    callback(null, results); // Passer les résultats au callback
+  });
 };
 
 module.exports = { createScore, getUserScores, getLeaderboard };
