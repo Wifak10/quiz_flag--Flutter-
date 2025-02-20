@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiz/routes/app_routes.dart';
-import 'screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +17,6 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,
-    
     );
   }
 }
