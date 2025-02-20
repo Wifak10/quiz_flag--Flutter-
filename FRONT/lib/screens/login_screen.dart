@@ -33,11 +33,14 @@ class _LoginScreenState extends State<LoginScreen> {
       final prefs = await SharedPreferences.getInstance();
       final responseData = jsonDecode(response.body);
       await prefs.setString('token', responseData['token']);
-      await prefs.setString('userId', responseData['userId'].toString()); // Convertir le userId en chaîne de caractères
+
+      // Convertir le userId en entier avant de le stocker
+      await prefs.setInt('userId', int.parse(responseData['userId'].toString()));
 
       // Vérifiez que les valeurs sont correctement stockées
       final storedToken = prefs.getString('token');
-      final storedUserId = prefs.getString('userId');
+     final storedUserId = prefs.getInt('userId');
+
       print('Token stocké: $storedToken');
       print('User ID stocké: $storedUserId');
 

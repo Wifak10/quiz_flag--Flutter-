@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flip_card/flip_card.dart';
 import 'package:confetti/confetti.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -23,7 +24,8 @@ class _GameScreenState extends State<GameScreen> {
   bool answerRevealed =
       false; // Indicateur pour savoir si la bonne réponse est révélée
 
-  late ConfettiController _confettiController; // Confetti controller pour l'animation
+  late ConfettiController
+      _confettiController; // Confetti controller pour l'animation
 
   @override
   void initState() {
@@ -79,7 +81,8 @@ class _GameScreenState extends State<GameScreen> {
       setState(() {
         score++;
         buttonColors[index] = Colors.blue; // Bonne réponse en bleu
-        _confettiController.play(); // Jouer les confettis pour une bonne réponse
+        _confettiController
+            .play(); // Jouer les confettis pour une bonne réponse
       });
     } else {
       setState(() {
@@ -144,8 +147,29 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      final token = prefs.getString('token');
+                     String userId = prefs.getInt('userId')?.toString() ?? ''; // Assure-toi que 'userId' est bien une String
+                      if (userId == null) {
+                        print('userId est null');
+                      } else {
+                        print('userId récupéré : $userId', );
+                      }
+                      print('score: $score');
+                      final response = await http.post(
+                        Uri.parse('http://localhost:5000/api/score'),
+                        headers: <String, String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                          'Authorization': 'Bearer $token',
+                        },
+                        body: jsonEncode(<String, dynamic>{
+                          'userId': 3,
+                          'score': score,
+                        }),
+                      );
                       setState(() {
+                        // Réinitialiser les pays
                         score = 0; // Réinitialiser le score
                         gameOver = false; // Réinitialiser l'état de fin de jeu
                       });
@@ -170,7 +194,8 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/'); // Retour à l'écran d'accueil
+                      Navigator.pushNamed(
+                          context, '/'); // Retour à l'écran d'accueil
                     },
                     child: const Text(
                       "Retour à l'accueil",

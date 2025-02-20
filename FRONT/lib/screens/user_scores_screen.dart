@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // <-- Ajoute cette ligne si elle n'est pas déjà présente
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +17,7 @@ class _UserScoresScreenState extends State<UserScoresScreen> {
   Future<void> fetchUserScores() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final userId = prefs.getString('userId'); // Assurez-vous que le userId est stocké dans les préférences partagées
+    final userId = prefs.getInt('userId'); // Utilise getInt pour récupérer un entier
 
     if (userId == null || token == null) {
       setState(() {
