@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../routes/app_routes.dart';
 
 const String baseUrl = 'http://localhost:5000/api';
-// import '../constants.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -30,10 +32,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', jsonDecode(response.body)['token']);
-      // Navigate to the game screen
-      Navigator.pushReplacementNamed(context, '/game');
+      Navigator.pushReplacementNamed(context, AppRoutes.game);
     } else {
-      // Handle login error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de la connexion')),
       );
@@ -60,6 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: login,
               child: Text('Login'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.register);
+              },
+              child: Text('Register'),
             ),
           ],
         ),
