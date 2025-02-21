@@ -1,35 +1,34 @@
 const db = require('../config/db');
 
-// Fonction pour récupérer le profil de l'utilisateur
-const getUserProfile = (userId, callback) => {
-  const query = 'SELECT id, username, email, avatar_url FROM users WHERE id = ?';
+// Fonction pour récupérer un utilisateur par email
+const getUserByEmail = (email, callback) => {
+  const query = 'SELECT * FROM users WHERE email = ?';
 
-  console.log('Exécution de la requête pour récupérer le profil de l\'utilisateur:', userId);
+  console.log('Exécution de la requête pour récupérer un utilisateur par email:', email);
 
-  db.query(query, [userId], (err, results) => {
+  db.query(query, [email], (err, results) => {
     if (err) {
-      console.error('Erreur lors de la récupération du profil:', err.message);
+      console.error('Erreur lors de la récupération de l\'utilisateur par email:', err.message);
       return callback(err);
     }
-    console.log('Profil récupéré:', results[0]);
-    callback(null, results[0]); // Passer le profil au callback
+    callback(null, results[0]); // Passer l'utilisateur au callback
   });
 };
 
-// Fonction pour mettre à jour le profil de l'utilisateur
-const updateUserProfile = (userId, { username, email, avatarUrl }, callback) => {
-  const query = 'UPDATE users SET username = ?, email = ?, avatar_url = ? WHERE id = ?';
+// Fonction pour créer un utilisateur
+const createUser = (username, email, password, avatar, callback) => {
+  const query = 'INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)';
 
-  console.log('Exécution de la requête pour mettre à jour le profil de l\'utilisateur:', { userId, username, email, avatarUrl });
+  console.log('Exécution de la requête pour créer un utilisateur:', { username, email, password, avatar });
 
-  db.query(query, [username, email, avatarUrl, userId], (err, result) => {
+  db.query(query, [username, email, password, avatar || null], (err, result) => {
     if (err) {
-      console.error('Erreur lors de la mise à jour du profil:', err.message);
+      console.error('Erreur lors de la création de l\'utilisateur:', err.message);
       return callback(err);
     }
-    console.log('Profil mis à jour avec succès:', result);
-    getUserProfile(userId, callback); // Récupérer le profil mis à jour
+    console.log('Utilisateur créé avec succès:', result);
+    callback(null, result);
   });
 };
 
-module.exports = { getUserProfile, updateUserProfile };
+module.exports = { getUserByEmail, createUser };

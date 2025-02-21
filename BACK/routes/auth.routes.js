@@ -10,6 +10,7 @@ router.post('/register', (req, res) => {
     // Vérifier si l'email existe déjà
     getUserByEmail(email, (err, user) => {
         if (err) {
+            console.error('Erreur lors de la vérification de l\'email:', err.message);
             return res.status(500).send('Erreur serveur');
         }
         if (user) {
@@ -18,12 +19,14 @@ router.post('/register', (req, res) => {
         // Hashage du mot de passe avant de l'enregistrer
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
+                console.error('Erreur lors du hashage du mot de passe:', err.message);
                 return res.status(500).send('Erreur lors du hashage du mot de passe');
             }
 
             // Créer l'utilisateur dans la base de données
             createUser(username, email, hashedPassword, avatar, (err, result) => {
                 if (err) {
+                    console.error('Erreur lors de l\'inscription:', err.message);
                     return res.status(500).send("Erreur lors de l'inscription");
                 }
                 res.status(201).send('Utilisateur créé avec succès');
@@ -59,4 +62,4 @@ router.post('/login', (req, res) => {
     });
 });
 
-module.exports = router; 
+module.exports = router;

@@ -33,18 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final prefs = await SharedPreferences.getInstance();
       final responseData = jsonDecode(response.body);
       await prefs.setString('token', responseData['token']);
-
-      // Convertir le userId en entier avant de le stocker
       await prefs.setInt('userId', int.parse(responseData['userId'].toString()));
 
-      // Vérifiez que les valeurs sont correctement stockées
-      final storedToken = prefs.getString('token');
-     final storedUserId = prefs.getInt('userId');
-
-      print('Token stocké: $storedToken');
-      print('User ID stocké: $storedUserId');
-
-      Navigator.pushReplacementNamed(context, AppRoutes.home); // Rediriger vers la page d'accueil
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de la connexion')),
@@ -55,57 +46,85 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(
+        title: Text('Connexion'),
+        backgroundColor: Colors.teal,
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Bienvenue',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+          child: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(maxWidth: 400), // Limite la largeur
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // décalage de l'ombre
                 ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Bienvenue',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
+                SizedBox(height: 20),
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.teal),
+                    ),
+                  ),
                 ),
-                obscureText: true,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: login,
-                child: Text('Login'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle: TextStyle(fontSize: 18),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Mot de passe',
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.teal),
+                    ),
+                  ),
+                  obscureText: true,
                 ),
-              ),
-              SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.register);
-                },
-                child: Text('Register'),
-                style: TextButton.styleFrom(
-                  textStyle: TextStyle(fontSize: 18),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: login,
+                  child: Text('Se connecter'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 15),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.register);
+                  },
+                  child: Text('Créer un compte'),
+                  style: TextButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16, color: Colors.teal),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
