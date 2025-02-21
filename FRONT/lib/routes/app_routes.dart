@@ -7,6 +7,7 @@ import 'package:quiz/screens/login_screen.dart';
 import 'package:quiz/screens/profile_screen.dart';
 import 'package:quiz/screens/leaderboard_screen.dart';
 import 'package:quiz/screens/user_scores_screen.dart';
+import 'package:quiz/screens/about_us_screen.dart'; // Importez l'écran "Qui Sommes Nous"
 
 class AppRoutes {
   static const String home = '/';
@@ -17,6 +18,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String leaderboard = '/leaderboard';
   static const String userScores = '/user-scores';
+  static const String aboutUs = '/about-us'; // Ajoutez la route "Qui Sommes Nous"
 
   static final Map<String, WidgetBuilder> routes = {
     home: (context) => const HomeScreen(),
@@ -30,5 +32,6 @@ class AppRoutes {
     profile: (context) => const ProfileScreen(),
     leaderboard: (context) => const LeaderboardScreen(),
     userScores: (context) => const UserScoresScreen(),
+   aboutUs: (context) => const AboutUsScreen(),
   };
 }

@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                   // Bouton stylisé pour démarrer le jeu
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.game);
+                      _showGameOptionsDialog(context);
                     },
                     child: const Text(
                       'Commencer le jeu',
@@ -207,6 +207,37 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showGameOptionsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Choisissez une option'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRoutes.game);
+                },
+                child: Text('Jouer le jeu des pays'),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, AppRoutes.aboutUs);
+                },
+                child: Text('Qui Sommes Nous ?'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
