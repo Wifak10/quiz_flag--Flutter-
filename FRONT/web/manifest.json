@@ -1,13 +1,15 @@
 {
-    "name": "quiz",
-    "short_name": "quiz",
+    "name": "Quiz des Pays - Apprendre la Géographie",
+    "short_name": "Quiz Pays",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#667eea",
+    "theme_color": "#667eea",
+    "description": "Application d'apprentissage géographique avec quiz des drapeaux et capitales. Jouable hors ligne !",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "categories": ["education", "games"],
+    "lang": "fr",
     "icons": [
         {
             "src": "icons/Icon-192.png",
