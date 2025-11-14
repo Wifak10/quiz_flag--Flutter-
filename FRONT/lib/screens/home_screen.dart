@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:ui';
 import '../routes/app_routes.dart';
+import '../theme/responsive_theme.dart';
+import '../widgets/common/animated_widgets.dart';
 import 'learning_mode_screen.dart';
 import 'capital_quiz_screen.dart';
 
@@ -84,18 +86,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFF667eea),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: ResponsiveTheme.flagsBackgroundDecoration,
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(

@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../routes/app_routes.dart';
+import '../theme/responsive_theme.dart';
+import '../widgets/common/animated_widgets.dart';
 
 const String baseUrl = 'http://localhost:5000/api';
 
@@ -134,13 +136,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
+        decoration: ResponsiveTheme.flagsBackgroundDecoration,
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(

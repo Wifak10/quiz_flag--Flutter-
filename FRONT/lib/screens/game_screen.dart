@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:flip_card/flip_card.dart';
 import 'package:confetti/confetti.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../theme/responsive_theme.dart';
+import '../widgets/common/animated_widgets.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -155,13 +157,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-          ),
-        ),
+        decoration: ResponsiveTheme.flagsBackgroundDecoration,
         child: SafeArea(
           child: Column(
             children: [

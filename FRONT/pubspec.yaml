@@ -20,13 +20,10 @@ dependencies:
   sqflite: ^2.3.0
   path: ^1.8.3
   flutter_staggered_animations: ^1.1.1
-  lottie: ^2.7.0
   cached_network_image: ^3.3.0
-  flutter_launcher_icons: ^0.13.1
   url_launcher: ^6.2.1
   share_plus: ^7.2.1
-  flutter_local_notifications: ^16.2.0
-  workmanager: ^0.5.2
+
 
 dev_dependencies:
   flutter_test:
